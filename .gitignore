@@ -1,0 +1,9 @@
+*.txt
+!runtime.txt
+!requirements.txt
+!id.txt
+!token.txt
+test/*
+__pycache__
+venv
+.env
