@@ -7,6 +7,7 @@ class UtilityCog(commands.Cog, name="Utility Commands"):
     def __init__(self, bot):
         self.bot = bot
 
+
     #----------cog methods----------#
 
     @commands.command(description='For when you wanna settle the score some other way')
