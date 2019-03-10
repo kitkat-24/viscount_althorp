@@ -8,7 +8,7 @@ from pymongo import MongoClient
 MONGODB_URI = os.environ['MONGODB_URI']
 
 
-class UserQueryCog(commands.Cog, name="Uses Query Commands"):
+class UserQueryCog(commands.Cog, name="User Commands"):
     def __init__(self, bot):
         self.bot = bot
 

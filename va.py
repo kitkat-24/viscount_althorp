@@ -1,4 +1,4 @@
-#import asyncio
+import asyncio
 import discord # discord.py rewrite
 from discord.ext import commands
 import os
