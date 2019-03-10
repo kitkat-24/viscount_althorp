@@ -53,7 +53,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def addnation(self, ctx, user : discord.User, nation : str, pres : int,
-            ind : int, mil : int, pop):
+            ind : int, mil : int, pop : int):
         """Add a nation to the nation collection.
 
         Requires an @mentioned user, their nation, prestige, industry, and mil
@@ -69,6 +69,18 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
         await ctx.send('Added {} playing as {}.'.format(user.name, nation))
 
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def removenation(self, ctx, nation : str):
+        """Remove a nation from the nation collection. THIS IS PERMANENT."""
+        client = MongoClient(MONGODB_URI)
+        db = client.get_database()
+        nations = db['nations'] # Select or create collection
+        nations.delete_one({"nation": nation})
+        client.close() # Clean up
+
+        await ctx.send('Removed nation {}.'.format(nation))
+
     #---------------------------Adjustments to Stats----------------------------#
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -80,8 +92,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
         nat = nations.find_one({"nation": nation})
         if nat:
-            updoot = int(nat["prestige"]) + pres
-            result = nations.update_one({'nation': nation}, {'$set': {'prestige': updoot}})
+            result = nations.update_one({'nation': nation}, {'$inc': {'prestige': pres}})
             await ctx.send('Updated {}\'s prestige to {}.'.format(nation, nat['prestige']))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
@@ -98,8 +109,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
         nat = nations.find_one({"nation": nation})
         if nat:
-            updoot = int(nat["industry"]) + pres
-            result = nations.update_one({'nation': nation}, {'$set': {'industry': updoot}})
+            result = nations.update_one({'nation': nation}, {'$inc': {'industry': ind}})
             await ctx.send('Updated {}\'s industry to {}.'.format(nation, nat['industry']))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
@@ -116,8 +126,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
         nat = nations.find_one({"nation": nation})
         if nat:
-            updoot = int(nat["military"]) + pres
-            result = nations.update_one({'nation': nation}, {'$set': {'military': updoot}})
+            result = nations.update_one({'nation': nation}, {'$inc': {'military': mil}})
             await ctx.send('Updated {}\'s military to {}.'.format(nation, nat['military']))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
