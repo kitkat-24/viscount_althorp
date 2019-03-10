@@ -23,7 +23,7 @@ async def on_ready():
     print(bot.user.id)
     print('-'*max(len(bot.user.name), len(str(bot.user.id))))
 
-cogs = ['cogs.userquery', 'cogs.adminquery', 'cogs.utility']
+cogs = ['cogs.userquery', 'cogs.adminquery', 'cogs.rolls', 'cogs.utility']
 
 if __name__ == '__main__':
     for cog in cogs:
