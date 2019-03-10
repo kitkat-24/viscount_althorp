@@ -16,10 +16,10 @@ class Rolls(commands.Cog, name="Stat Commands"):
     async def justify(self, ctx, dur : int, maxinf : int):
         """Returns infamy gained due to war goal justification."""
         days = round(np.random.normal(dur/2, dur*0.375))
-        inf = round(maxinf*(days/dur))
+        inf = round(maxinf*((dur - days)/dur))
 
         if inf > 0:
-            await ctx.send('Discovered after {} days! Infamy accrued: {}'.format(days, inf))
+            await ctx.send('Discovered after {} days! Infamy accrued: {}'.format(days, min((inf, maxinf)))
         else:
             await ctx.send('Fabrication not discovered.')
 
