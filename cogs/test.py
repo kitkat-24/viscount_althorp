@@ -15,10 +15,10 @@ class TestCog(commands.Cog, name="Test Commands"):
         """Check parameter typecasting"""
         await ctx.send(type(num))
 
-    @commands.command(hidden=True)
-    async def listarg(self, ctx, l : List[int]):
-        """Try to parse a list of integers."""
-        awaitctx.send("L: {}, type: {}".format(str(l), type(l)))
+    #@commands.command(hidden=True)
+    #async def listarg(self, ctx, l : list[int]):
+    #    """Try to parse a list of integers."""
+    #    awaitctx.send("L: {}, type: {}".format(str(l), type(l)))
 
 
 
