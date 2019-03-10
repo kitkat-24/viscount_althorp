@@ -79,15 +79,14 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         nations = db['nations'] # Select or create collection
 
         nat = nations.find_one({"nation": nation})
-        updoot = int(nat["prestige"]) + pres
-        result = nations.update_one({'nation': nation}, {'$set': {'prestige': updoot}})
-        nat = nations.find_one({'nation': nation})
-        client.close() # Clean up
-
-        if result.modified_count == 1:
+        if nat:
+            updoot = int(nat["prestige"]) + pres
+            result = nations.update_one({'nation': nation}, {'$set': {'prestige': updoot}})
             await ctx.send('Updated {}\'s prestige to {}.'.format(nation, nat['prestige']))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
+
+        client.close() # Clean up
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -98,15 +97,14 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         nations = db['nations'] # Select or create collection
 
         nat = nations.find_one({"nation": nation})
-        updoot = int(nat["industry"]) + pres
-        result = nations.update_one({'nation': nation}, {'$set': {'industry': updoot}})
-        nat = nations.find_one({'nation': nation})
-        client.close() # Clean up
-
-        if result.modified_count == 1:
+        if nat:
+            updoot = int(nat["industry"]) + pres
+            result = nations.update_one({'nation': nation}, {'$set': {'industry': updoot}})
             await ctx.send('Updated {}\'s industry to {}.'.format(nation, nat['industry']))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
+
+        client.close() # Clean up
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -117,15 +115,14 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         nations = db['nations'] # Select or create collection
 
         nat = nations.find_one({"nation": nation})
-        updoot = int(nat["military"]) + pres
-        result = nations.update_one({'nation': nation}, {'$set': {'military': updoot}})
-        nat = nations.find_one({'nation': nation})
-        client.close() # Clean up
-
-        if result.modified_count == 1:
+        if nat:
+            updoot = int(nat["military"]) + pres
+            result = nations.update_one({'nation': nation}, {'$set': {'military': updoot}})
             await ctx.send('Updated {}\'s military to {}.'.format(nation, nat['military']))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
+
+        client.close() # Clean up
 
 
 def setup(bot):
