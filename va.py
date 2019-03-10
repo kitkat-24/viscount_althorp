@@ -2,19 +2,12 @@ import asyncio
 import discord # discord.py rewrite
 from discord.ext import commands
 import os
-from pymongo import MongoClient
 import random
-import traceback
+import traceback, sys
 
-
-# Load secure environment variables
-BOT_TOKEN = os.environ['BOT_TOKEN']
-#SERVER_ID = os.environ['SERVER_ID']
 
 
 bot = commands.Bot(command_prefix='.')
-
-
 
 @bot.event
 async def on_ready():
@@ -30,8 +23,9 @@ if __name__ == '__main__':
         try:
             bot.load_extension(cog)
         except Exception as e:
-            print(f'Failed to load {cog}.')
+            print(f'Failed to load {cog}.', file=sys.stderr)
             traceback.print_exc()
 
-# Actually run the bot
-bot.run(BOT_TOKEN, bot=True, reconnect=True)
+
+BOT_TOKEN = os.environ['BOT_TOKEN'] # Load bot token from heroku env
+bot.run(BOT_TOKEN, bot=True, reconnect=True) # Actually run the bot
