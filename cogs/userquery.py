@@ -13,9 +13,8 @@ class UserQueryCog(commands.Cog, name="Uses Query Commands"):
         self.bot = bot
 
 
-    #
-    # Actual methods
-    #
+    #----------cog methods----------#
+
     @commands.command(pass_context = True)
     async def checkuser(self, ctx, user : discord.User):
         """Check if a user is in the users table."""
