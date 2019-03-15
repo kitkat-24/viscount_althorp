@@ -9,6 +9,6 @@ through Heroku's MLab plugin.
 
 Todo
 ====
-[] individual pop types
-[] independent connection module for robust error handling
-[] some form of unit testing
+- [ ] individual pop types
+- [ ] independent connection module for robust error handling
+- [ ] some form of unit testing
