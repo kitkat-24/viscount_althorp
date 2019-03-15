@@ -16,6 +16,7 @@ async def on_ready():
     print(bot.user.id)
     print('-'*max(len(bot.user.name), len(str(bot.user.id))))
 
+
 cogs = ['cogs.userquery', 'cogs.adminquery', 'cogs.rolls', 'cogs.utility',
         'cogs.test']
 

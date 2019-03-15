@@ -5,133 +5,112 @@ import os
 from pymongo import MongoClient
 import numpy as np
 
+
 # Load database URI from heroku env
 MONGODB_URI = os.environ['MONGODB_URI']
-
 
 class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
     def __init__(self, bot):
         self.bot = bot
+        self.client = MongoClient(MONGODB_URI)
+        # As far as I can tell, on the free plan you're only allowed to access the
+        # default database created for you by heroku.
+        self.db = self.client.get_database()
+
+    def cog_unload(self):
+        self.client.close()
+        print("AdminQueryCog unload called on shutdown")
 
 
     #----------cog methods----------#
 
-    @commands.command()
-    @commands.has_permissions(administrator=True, hidden=True)
+    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
     #@commands.has_role("Admin") # Is another option I think
     async def adduser(ctx, user : discord.User, nation):
         """Add a user to the users table.
         Requires an @mentioned user and their nation (separated by a space)."""
-        client = MongoClient(MONGODB_URI)
-        # As far as I can tell, on the free plan you're only allowed to access the
-        # default database created for you by heroku.
-        db = client.get_database()
-        users = db['users'] # Select or create collection
-
+        users = self.db['users'] # Select or create collection
         user_data = {'uid' : user.id, 'username' : user.name,
                 'discriminator' : user.discriminator, 'nation' : nation}
         users.insert_one(user_data)
-        client.close() # Clean up
 
         await ctx.send('Added {} playing as {}.'.format(user.name, nation))
 
-    @commands.command()
-    @commands.has_permissions(administrator=True, hidden=True)
+    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
     #@commands.has_role("Admin") # Is another option I think
     async def removeuser(ctx, user : discord.User, nation):
         """Remove a user from the users table.
         Requires an @mentioned user and their nation (separated by a space)."""
-        client = MongoClient(MONGODB_URI)
-        db = client.get_database()
-        users = db['users']
-
+        users = self.db['users']
         users.delete({'uid': user.id}) # Filter functions like a query
-        client.close() # Clean up
 
         await ctx.send('Added {} playing as {}.'.format(user.name, nation))
 
-    @commands.command()
-    @commands.has_permissions(administrator=True, hidden=True)
+    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
     async def addnation(self, ctx, user : discord.User, nation : str, pres : int,
             ind : int, mil : int, pop : int):
         """Add a nation to the nation collection.
 
         Requires an @mentioned user, their nation, prestige, industry, and mil
         scores, and the population (separated by spaces, no commas in numbers)."""
-        client = MongoClient(MONGODB_URI)
-        db = client.get_database()
-        nations = db['nations'] # Select or create collection
-
+        nations = self.db['nations'] # Select or create collection
         n_data = {'nation': nation, 'uid': user.id, 'prestige': pres,
                 'industry': ind, 'military': mil, 'pop': pop}
         nations.insert_one(n_data)
-        client.close() # Clean up
 
         await ctx.send('Added {} playing as {}.'.format(user.name, nation))
 
-    @commands.command()
-    @commands.has_permissions(administrator=True, hidden=True)
+    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
     async def removenation(self, ctx, nation : str):
         """Remove a nation from the nation collection. THIS IS PERMANENT."""
-        client = MongoClient(MONGODB_URI)
-        db = client.get_database()
-        nations = db['nations'] # Select or create collection
+        nations = self.db['nations'] # Select or create collection
         nations.delete_one({"nation": nation})
-        client.close() # Clean up
 
         await ctx.send('Removed nation {}.'.format(nation))
 
     #---------------------------Adjustments to Stats----------------------------#
-    @commands.command()
-    @commands.has_permissions(administrator=True, hidden=True)
+    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
     async def adjustprestige(self, ctx, nation : str, pres : int):
         """Change a nation's prestige."""
-        client = MongoClient(MONGODB_URI)
-        db = client.get_database()
-        nations = db['nations'] # Select or create collection
-
+        nations = self.db['nations'] # Select or create collection
         nat = nations.find_one({"nation": nation})
+
         if nat:
             result = nations.update_one({'nation': nation}, {'$inc': {'prestige': pres}})
-            await ctx.send('Updated {}\'s prestige to {}.'.format(nation, nat['prestige']))
+            await ctx.send('Updated {}\'s prestige to {}.'.format(nation, nat['prestige'] + pres))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
 
-        client.close() # Clean up
-
-    @commands.command()
-    @commands.has_permissions(administrator=True, hidden=True)
+    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
     async def adjustindustry(self, ctx, nation : str, ind : int):
         """Change a nation's industry."""
-        client = MongoClient(MONGODB_URI)
-        db = client.get_database()
-        nations = db['nations'] # Select or create collection
-
+        nations = self.db['nations'] # Select or create collection
         nat = nations.find_one({"nation": nation})
+
         if nat:
             result = nations.update_one({'nation': nation}, {'$inc': {'industry': ind}})
-            await ctx.send('Updated {}\'s industry to {}.'.format(nation, nat['industry']))
+            await ctx.send('Updated {}\'s industry to {}.'.format(nation, nat['industry'] + ind))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
 
-        client.close() # Clean up
-
-    @commands.command()
-    @commands.has_permissions(administrator=True, hidden=True)
+    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
     async def adjustmilitary(self, ctx, nation : str, mil : int):
         """Change a nation's military."""
-        client = MongoClient(MONGODB_URI)
-        db = client.get_database()
-        nations = db['nations'] # Select or create collection
-
+        nations = self.db['nations'] # Select or create collection
         nat = nations.find_one({"nation": nation})
+
         if nat:
             result = nations.update_one({'nation': nation}, {'$inc': {'military': mil}})
-            await ctx.send('Updated {}\'s military to {}.'.format(nation, nat['military']))
+            await ctx.send('Updated {}\'s military to {}.'.format(nation, nat['military'] + mil))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
-
-        client.close() # Clean up
 
 
 def setup(bot):
