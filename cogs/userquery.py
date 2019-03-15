@@ -11,51 +11,49 @@ MONGODB_URI = os.environ['MONGODB_URI']
 class UserQueryCog(commands.Cog, name="User Commands"):
     def __init__(self, bot):
         self.bot = bot
+        self.client = MongoClient(MONGODB_URI)
+        # As far as I can tell, on the free plan you're only allowed to access the
+        # default database created for you by heroku.
+        self.db = self.client.get_database()
+
+    def cog_unload(self):
+        self.client.close()
+        print("UserQueryCog unload called on shutdown")
 
 
     #----------cog methods----------#
 
-    @commands.command(pass_context = True)
+    @commands.command()
     async def checkuser(self, ctx, user : discord.User):
         """Check if a user is in the users table."""
-        client = MongoClient(MONGODB_URI)
-        db = client.get_database()
-        users = db['users'] # Select or create collection
-
+        users = self.db['users'] # Select or create collection
         query = {'uid' : user.id}
         result = users.find_one(query) # Use find_one() since we know id is unique
+
         if result: # result should be None if not found
             await ctx.send('Found user {}.'.format(user.name))
         else:
             await ctx.send('Could not find user {}.'.format(user.name))
 
-        client.close()
-
-    @commands.command(pass_context = True)
+    @commands.command()
     async def getnation(self, ctx, user : discord.User):
         """Get the nation for the given player."""
-        client = MongoClient(MONGODB_URI)
-        db = client.get_database()
-        nations = db['nations'] # Select or create collection
-
+        nations = self.db['nations'] # Select or create collection
         query = {'uid' : user.id}
         result = nations.find_one(query) # Use find_one() since we know id is unique
+
         if result: # result should be None if not found
             await ctx.send('{}\'s nation is {}.'.format(user.name, result['nation']))
         else:
             await ctx.send('Could not find {}\'s nation.'.format(user.name))
 
-        client.close()
-
-    @commands.command(pass_context = True)
+    @commands.command()
     async def getplayer(self, ctx, nation):
         """Get the player for the given nation."""
-        client = MongoClient(MONGODB_URI)
-        db = client.get_database()
-        nations = db['nations'] # Select or create collection
-
+        nations = self.db['nations'] # Select or create collection
         query = {'nation' : nation}
         result = nations.find_one(query) # Use find_one() since we know id is unique
+
         if result: # result should be None if not found
             user = get(self.bot.get_all_members(), id=result['uid'])
             if user:
@@ -65,17 +63,13 @@ class UserQueryCog(commands.Cog, name="User Commands"):
         else:
             await ctx.send('Could not find nation {}.'.format(nation))
 
-        client.close()
-
-    @commands.command(pass_context = True)
+    @commands.command()
     async def getnationstats(self, ctx, nation):
         """Show the given nation's information."""
-        client = MongoClient(MONGODB_URI)
-        db = client.get_database()
-        nations = db['nations'] # Select or create collection
-
+        nations = self.db['nations'] # Select or create collection
         query = {'nation' : nation}
         result = nations.find_one(query) # Use find_one() since we know id is unique
+
         if result: # result should be None if not found
             embed=discord.Embed(title=" ")
             embed.set_author(name=nation)
@@ -86,8 +80,6 @@ class UserQueryCog(commands.Cog, name="User Commands"):
             await ctx.send(embed=embed)
         else:
             await ctx.send('Could not find nation {}.'.format(nation))
-
-        client.close()
 
 
 def setup(bot):
