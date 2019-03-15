@@ -29,7 +29,7 @@ class UtilityCog(commands.Cog, name="Utility Commands"):
     # TODO add modifiers to rolls
     @commands.command()
     async def roll(self, ctx, dice : str):
-        """Rolls a dice in NdN format."""
+        """Rolls dice in NdN format."""
         try:
             rolls, limit = map(int, dice.split('d'))
         except Exception:
@@ -40,7 +40,7 @@ class UtilityCog(commands.Cog, name="Utility Commands"):
         if rolls > 1:
             await ctx.send('({})    (sum: {})'.format(', '.join(str(n) for n in result), sum(result)))
         else:
-            await ctx.send('{}'.format(str(result[0])))
+            await ctx.send('({})'.format(str(result[0])))
 
     @commands.command()
     async def whoareyou(self, ctx):
