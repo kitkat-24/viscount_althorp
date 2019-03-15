@@ -17,7 +17,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
     #----------cog methods----------#
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, hidden=True)
     #@commands.has_role("Admin") # Is another option I think
     async def adduser(ctx, user : discord.User, nation):
         """Add a user to the users table.
@@ -36,7 +36,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         await ctx.send('Added {} playing as {}.'.format(user.name, nation))
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, hidden=True)
     #@commands.has_role("Admin") # Is another option I think
     async def removeuser(ctx, user : discord.User, nation):
         """Remove a user from the users table.
@@ -51,7 +51,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         await ctx.send('Added {} playing as {}.'.format(user.name, nation))
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, hidden=True)
     async def addnation(self, ctx, user : discord.User, nation : str, pres : int,
             ind : int, mil : int, pop : int):
         """Add a nation to the nation collection.
@@ -70,7 +70,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         await ctx.send('Added {} playing as {}.'.format(user.name, nation))
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, hidden=True)
     async def removenation(self, ctx, nation : str):
         """Remove a nation from the nation collection. THIS IS PERMANENT."""
         client = MongoClient(MONGODB_URI)
@@ -83,7 +83,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
     #---------------------------Adjustments to Stats----------------------------#
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, hidden=True)
     async def adjustprestige(self, ctx, nation : str, pres : int):
         """Change a nation's prestige."""
         client = MongoClient(MONGODB_URI)
@@ -100,7 +100,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         client.close() # Clean up
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, hidden=True)
     async def adjustindustry(self, ctx, nation : str, ind : int):
         """Change a nation's industry."""
         client = MongoClient(MONGODB_URI)
@@ -117,7 +117,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         client.close() # Clean up
 
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, hidden=True)
     async def adjustmilitary(self, ctx, nation : str, mil : int):
         """Change a nation's military."""
         client = MongoClient(MONGODB_URI)
