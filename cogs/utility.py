@@ -26,10 +26,9 @@ class UtilityCog(commands.Cog, name="Utility Commands"):
         """Ping the user who used this command."""
         await ctx.send('{} gotcha'.format(ctx.author.mention))
 
-    # TODO add modifiers to rolls
     @commands.command()
-    async def roll(self, ctx, dice : str):
-        """Rolls dice in NdN format."""
+    async def roll(self, ctx, dice : str, mod : int=0):
+        """Rolls dice in NdN + modifier format."""
         try:
             rolls, limit = map(int, dice.split('d'))
         except Exception:
@@ -37,10 +36,20 @@ class UtilityCog(commands.Cog, name="Utility Commands"):
             return
 
         result = [random.randint(1, limit) for r in range(rolls)]
-        if rolls > 1:
-            await ctx.send('({})    (sum: {})'.format(', '.join(str(n) for n in result), sum(result)))
-        else:
-            await ctx.send('({})'.format(str(result[0])))
+
+        # Build strings of roll +/- modifier
+        rolls = []
+        total = 0
+        for r in result:
+            total += r + mod
+            if mod > 0:
+                rolls.append('{}+{}'.format(r, mod))
+            elif mod < 0:
+                rolls.append('{}-{}'.format(r, mod))
+            else:
+                rolls.append('{}'.format(r))
+
+        await ctx.send('Rolled {}    (sum: {})'.format(', '.join(rolls), total))
 
     @commands.command()
     async def whoareyou(self, ctx):
