@@ -121,7 +121,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
         if nat:
             result = nations.update_one({'nation': nation}, {'$inc': {'pop': pop}})
-            await ctx.send('Updated {}\'s military to {}.'.format(nation, nat['pop'] + pop))
+            await ctx.send('Updated {}\'s population to {}.'.format(nation, nat['pop'] + pop))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
 

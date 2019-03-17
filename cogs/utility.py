@@ -41,11 +41,20 @@ class UtilityCog(commands.Cog, name="Utility Commands"):
         rolls = []
         total = 0
         for r in result:
-            total += r + mod
+            # Threshold total so that each die adds between 1 and limit
+            inc = r + mod
+            if inc < 1:
+                total += 1
+            elif inc > limit:
+                total += limit
+            else:
+                total += r + mod
+            # Print roll and modifier
             if mod > 0:
                 rolls.append('{}+{}'.format(r, mod))
             elif mod < 0:
-                rolls.append('{}-{}'.format(r, mod))
+                # Negative numbers add their own '-', but I wanted to be safe
+                rolls.append('{}-{}'.format(r, abs(mod)))
             else:
                 rolls.append('{}'.format(r))
 
