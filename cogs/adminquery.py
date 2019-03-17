@@ -76,7 +76,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
     @commands.command(hidden=True)
     @commands.has_permissions(administrator=True)
     async def adjustprestige(self, ctx, nation : str, pres : int):
-        """Change a nation's prestige."""
+        """Change a nation's prestige score."""
         nations = self.db['nations'] # Select or create collection
         nat = nations.find_one({"nation": nation})
 
@@ -89,7 +89,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
     @commands.command(hidden=True)
     @commands.has_permissions(administrator=True)
     async def adjustindustry(self, ctx, nation : str, ind : int):
-        """Change a nation's industry."""
+        """Change a nation's industry score."""
         nations = self.db['nations'] # Select or create collection
         nat = nations.find_one({"nation": nation})
 
@@ -102,13 +102,26 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
     @commands.command(hidden=True)
     @commands.has_permissions(administrator=True)
     async def adjustmilitary(self, ctx, nation : str, mil : int):
-        """Change a nation's military."""
+        """Change a nation's military score."""
         nations = self.db['nations'] # Select or create collection
         nat = nations.find_one({"nation": nation})
 
         if nat:
             result = nations.update_one({'nation': nation}, {'$inc': {'military': mil}})
             await ctx.send('Updated {}\'s military to {}.'.format(nation, nat['military'] + mil))
+        else:
+            await ctx.send('Could not find nation "{}".'.format(nation))
+
+    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
+    async def adjustpop(self, ctx, nation : str, pop : int):
+        """Change a nation's population."""
+        nations = self.db['nations'] # Select or create collection
+        nat = nations.find_one({"nation": nation})
+
+        if nat:
+            result = nations.update_one({'nation': nation}, {'$inc': {'pop': pop}})
+            await ctx.send('Updated {}\'s military to {}.'.format(nation, nat['pop'] + pop))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
 
