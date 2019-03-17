@@ -49,12 +49,17 @@ class UtilityCog(commands.Cog, name="Utility Commands"):
                 total += limit
             else:
                 total += r + mod
+
+            # Highlight crit successes and failures
+            if r == limit:
+                r = '***{}***'.format(limit)
+            elif r == 1:
+                r = '***1***'
             # Print roll and modifier
             if mod > 0:
-                rolls.append('{}+{}'.format(r, mod))
+                rolls.append('{} + {}'.format(r, mod))
             elif mod < 0:
-                # Negative numbers add their own '-', but I wanted to be safe
-                rolls.append('{}-{}'.format(r, abs(mod)))
+                rolls.append('{} - {}'.format(r, abs(mod)))
             else:
                 rolls.append('{}'.format(r))
 
