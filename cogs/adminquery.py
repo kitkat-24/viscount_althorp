@@ -166,6 +166,32 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
 
+    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
+    async def settech(self, ctx, nation : str, mil : int, nav : int, cul : int,
+            comm : int, ind):
+        """Set a nation's technology."""
+        nations = self.db['nations'] # Select or create collection
+        nat = nations.find_one({"nation": nation})
+
+        if nat:
+            nations.update_one(
+                {'nation': nation},
+                {
+                    '$set': {
+                        'tech.military': mil,
+                        'tech.navy': nav,
+                        'tech.culture': cul,
+                        'tech.commerce': comm
+                        'tech.industry': ind
+                    }
+                }
+            )
+            await ctx.send('Set {}\'s tech to `[{} | {} | {} | {} | {}]`.'.format(
+                    nation, mil, nav, cul, comm, ind)
+        else:
+            await ctx.send('Could not find nation "{}".'.format(nation))
+
 
 def setup(bot):
     bot.add_cog(AdminQueryCog(bot))

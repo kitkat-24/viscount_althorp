@@ -64,7 +64,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
             await ctx.send('Could not find nation {}.'.format(nation))
 
     @commands.command()
-    async def getnationstats(self, ctx, nation):
+    async def getstats(self, ctx, nation):
         """Show the given nation's information."""
         nations = self.db['nations'] # Select or create collection
         query = {'nation' : nation}
@@ -80,6 +80,25 @@ class UserQueryCog(commands.Cog, name="User Commands"):
             embed.add_field(name="Middleclass pop", value="{:,}".format(int(result['pop']['middle'])), inline=True)
             embed.add_field(name="Proletarian pop", value="{:,}".format(int(result['pop']['proletarian'])), inline=True)
             embed.add_field(name="Peasant pop", value="{:,}".format(int(result['pop']['peasant'])), inline=True)
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send('Could not find nation {}.'.format(nation))
+
+    @commands.command()
+    async def gettech(self, ctx, nation):
+        """Show the given nation's tech levels."""
+        nations = self.db['nations']
+        query = {'nation' : nation}
+        result = nations.find_one(query)
+
+        if result:
+            embed=discord.Embed(title=nation)
+            embed.set_author(name='Technology')
+            embed.add_field(name='Miliary', value=result['tech']['military'], inline=False)
+            embed.add_field(name='Navy', value=result['tech']['navy'], inline=False)
+            embed.add_field(name='Culture', value=result['tech']['culture'], inline=False)
+            embed.add_field(name='Commerce', value=result['tech']['commerce'], inline=False)
+            embed.add_field(name='Industry', value=result['tech']['industry'], inline=False)
             await ctx.send(embed=embed)
         else:
             await ctx.send('Could not find nation {}.'.format(nation))
