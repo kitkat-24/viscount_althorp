@@ -182,13 +182,13 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
                         'tech.military': mil,
                         'tech.navy': nav,
                         'tech.culture': cul,
-                        'tech.commerce': comm
+                        'tech.commerce': comm,
                         'tech.industry': ind
                     }
                 }
             )
             await ctx.send('Set {}\'s tech to `[{} | {} | {} | {} | {}]`.'.format(
-                    nation, mil, nav, cul, comm, ind)
+                    nation, mil, nav, cul, comm, ind))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
 

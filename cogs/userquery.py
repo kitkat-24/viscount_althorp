@@ -94,11 +94,11 @@ class UserQueryCog(commands.Cog, name="User Commands"):
         if result:
             embed=discord.Embed(title=nation)
             embed.set_author(name='Technology')
-            embed.add_field(name='Miliary', value=result['tech']['military'], inline=False)
-            embed.add_field(name='Navy', value=result['tech']['navy'], inline=False)
-            embed.add_field(name='Culture', value=result['tech']['culture'], inline=False)
-            embed.add_field(name='Commerce', value=result['tech']['commerce'], inline=False)
-            embed.add_field(name='Industry', value=result['tech']['industry'], inline=False)
+            embed.add_field(name='Miliary', value=result['tech']['military'], inline=True)
+            embed.add_field(name='Navy', value=result['tech']['navy'], inline=True)
+            embed.add_field(name='Culture', value=result['tech']['culture'], inline=True)
+            embed.add_field(name='Commerce', value=result['tech']['commerce'], inline=True)
+            embed.add_field(name='Industry', value=result['tech']['industry'], inline=True)
             await ctx.send(embed=embed)
         else:
             await ctx.send('Could not find nation {}.'.format(nation))
