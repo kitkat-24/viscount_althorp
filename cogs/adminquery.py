@@ -114,14 +114,55 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
     @commands.command(hidden=True)
     @commands.has_permissions(administrator=True)
-    async def adjustpop(self, ctx, nation : str, pop : int):
+    async def setpop(self, ctx, nation : str, upper : int, middle : int,
+            prole : int, peas : int):
+        """Set a nation's population.
+        Takes a nation and then their upperclass, middleclass, proletarian, and
+        peasant populations (separated by spaces, no commas)."""
+        nations = self.db['nations'] # Select or create collection
+        nat = nations.find_one({"nation": nation})
+
+        if nat:
+            nations.update_one(
+                {'nation': nation},
+                {
+                    '$set': {
+                        'pop': {
+                            'upper': upper,
+                            'middle': middle,
+                            'proletarian': prole,
+                            'peasant': peas
+                         }
+                    }
+                }
+            )
+            nat = nations.find_one({"nation": nation})
+            await ctx.send('Set {}\'s population to {}.'.format(nation, nat['pop']))
+        else:
+            await ctx.send('Could not find nation "{}".'.format(nation))
+
+    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
+    async def adjustpop(self, ctx, nation : str, upper : int, middle : int,
+            prole : int, peas : int):
         """Change a nation's population."""
         nations = self.db['nations'] # Select or create collection
         nat = nations.find_one({"nation": nation})
 
         if nat:
-            result = nations.update_one({'nation': nation}, {'$inc': {'pop': pop}})
-            await ctx.send('Updated {}\'s population to {}.'.format(nation, nat['pop'] + pop))
+            nations.update_one(
+                {'nation': nation},
+                {
+                    '$inc': {
+                        'pop.upper': upper,
+                        'pop.middle': middle,
+                        'pop.proletarian': prole,
+                        'pop.peasant': peas
+                    }
+                }
+            )
+            nat = nations.find_one({"nation": nation})
+            await ctx.send('Set {}\'s population to {}.'.format(nation, nat['pop']))
         else:
             await ctx.send('Could not find nation "{}".'.format(nation))
 

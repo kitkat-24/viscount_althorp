@@ -76,10 +76,23 @@ class UserQueryCog(commands.Cog, name="User Commands"):
             embed.add_field(name="Prestige", value=result['prestige'], inline=True)
             embed.add_field(name="Industry", value=result['industry'], inline=True)
             embed.add_field(name="Military", value=result['military'], inline=True)
-            embed.add_field(name="Population", value="{:,}".format(int(result['pop'])), inline=True) # Format as comma-separated int
+            #embed.add_field(name="Population", value="{:,}".format(int(result['pop'])), inline=True) # Format as comma-separated int
             await ctx.send(embed=embed)
         else:
             await ctx.send('Could not find nation {}.'.format(nation))
+
+    @commands.command()
+    async def listnations(self, ctx):
+        """List all tracked nations and their players."""
+        nations = self.db['nations']
+
+        await ctx.send('__Nation: Player (nickname)__')
+        for nation in nations.find():
+            user = get(self.bot.get_all_members(), id=nation['uid'])
+            if user:
+                await ctx.send('{}: {} ({})'.format(nation['nation'], user.name, user.display_name))
+            else:
+                await ctx.send('{}: Player not found.'.format(nation))
 
 
 def setup(bot):
