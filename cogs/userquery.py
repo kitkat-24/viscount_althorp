@@ -76,7 +76,10 @@ class UserQueryCog(commands.Cog, name="User Commands"):
             embed.add_field(name="Prestige", value=result['prestige'], inline=True)
             embed.add_field(name="Industry", value=result['industry'], inline=True)
             embed.add_field(name="Military", value=result['military'], inline=True)
-            #embed.add_field(name="Population", value="{:,}".format(int(result['pop'])), inline=True) # Format as comma-separated int
+            embed.add_field(name="Upperclass pop", value="{:,}".format(int(result['pop']['upper'])), inline=True) # Format as comma-separated int
+            embed.add_field(name="Middleclass pop", value="{:,}".format(int(result['pop']['middle'])), inline=True)
+            embed.add_field(name="Proletarian pop", value="{:,}".format(int(result['pop']['proletarian'])), inline=True)
+            embed.add_field(name="Peasant pop", value="{:,}".format(int(result['pop']['peasant'])), inline=True)
             await ctx.send(embed=embed)
         else:
             await ctx.send('Could not find nation {}.'.format(nation))
