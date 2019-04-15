@@ -18,7 +18,7 @@ async def on_ready():
 
 
 cogs = ['cogs.userquery', 'cogs.adminquery', 'cogs.rolls', 'cogs.utility',
-        'cogs.test']
+        'cogs.test', 'cogs.secret']
 
 if __name__ == '__main__':
     for cog in cogs:
