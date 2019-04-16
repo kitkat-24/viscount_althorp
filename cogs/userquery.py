@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 import os
 from pymongo import MongoClient
+import math
 
 # Load database URI from heroku env
 MONGODB_URI = os.environ['MONGODB_URI']
@@ -48,7 +49,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
             await ctx.send('Could not find {}\'s nation.'.format(user.name))
 
     @commands.command()
-    async def getplayer(self, ctx, nation):
+    async def getplayer(self, ctx, nation : str):
         """Get the player for the given nation."""
         nations = self.db['nations'] # Select or create collection
         query = {'nation' : nation}
@@ -64,7 +65,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
             await ctx.send('Could not find nation {}.'.format(nation))
 
     @commands.command()
-    async def getstats(self, ctx, nation):
+    async def getstats(self, ctx, nation : str):
         """Show the given nation's information."""
         nations = self.db['nations'] # Select or create collection
         query = {'nation' : nation}
@@ -85,7 +86,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
             await ctx.send('Could not find nation {}.'.format(nation))
 
     @commands.command()
-    async def gettech(self, ctx, nation):
+    async def gettech(self, ctx, nation : str):
         """Show the given nation's tech levels."""
         nations = self.db['nations']
         query = {'nation' : nation}
@@ -115,6 +116,22 @@ class UserQueryCog(commands.Cog, name="User Commands"):
                 await ctx.send('{}: {} ({})'.format(nation['nation'], user.name, user.display_name))
             else:
                 await ctx.send('{}: Player not found.'.format(nation))
+
+    @commands.command()
+    async def getadvantage(self, ctx, n1 : str, n2 : str):
+        """Get the die roll advantage (or disadvantage) nation 1 has against
+        nation 2."""
+        nations = self.db['nations']
+
+        nat1 = nations.find_one({'nation': n1})
+        mil1 = nat1['military']
+        nat2 = nations.find_one({'nation': n2})
+        mil2 = nat2['military']
+
+        # adv \in \Z \cap [-10, 10], determined by logistic curve with adv = +10
+        # for (mil1-mil2) \approx 800
+        adv = round(20.0/(1 + math.exp(-0.007*(mil1-mil2))) - 10)
+        await ctx.send('{} has advantage {:+} over {}.'.format(n1, adv, n2))
 
 
 def setup(bot):
