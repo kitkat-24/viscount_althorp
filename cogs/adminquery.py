@@ -27,7 +27,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
     @commands.command(hidden=True)
     @commands.has_permissions(administrator=True)
     #@commands.has_role("Admin") # Is another option I think
-    async def adduser(self, ctx, user : discord.User, nation):
+    async def adduser(self, ctx, user : discord.User, nation : str):
         """Add a user to the users table.
         Requires an @mentioned user and their nation (separated by a space)."""
         users = self.db['users'] # Select or create collection
@@ -40,7 +40,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
     @commands.command(hidden=True)
     @commands.has_permissions(administrator=True)
     #@commands.has_role("Admin") # Is another option I think
-    async def removeuser(self, ctx, user : discord.User, nation):
+    async def removeuser(self, ctx, user : discord.User, nation : str):
         """Remove a user from the users table.
         Requires an @mentioned user and their nation (separated by a space)."""
         users = self.db['users']

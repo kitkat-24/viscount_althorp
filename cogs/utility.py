@@ -73,7 +73,5 @@ class UtilityCog(commands.Cog, name="Utility Commands"):
                 'Check out my wikipedia page to learn more about me:\n<{}>'.format(wiki_url))
 
 
-
-
 def setup(bot):
     bot.add_cog(UtilityCog(bot))
