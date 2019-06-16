@@ -1,4 +1,4 @@
-import discord # discord.py rewrite
+import discord  # discord.py rewrite
 from discord.ext import commands
 from discord.utils import get
 import os
@@ -21,41 +21,40 @@ class UserQueryCog(commands.Cog, name="User Commands"):
         self.client.close()
         print("UserQueryCog unload called on shutdown")
 
-
-    #----------cog methods----------#
+    # ----------cog methods----------#
 
     @commands.command()
-    async def checkuser(self, ctx, user : discord.User):
+    async def checkuser(self, ctx, user: discord.User):
         """Check if a user is in the users table."""
-        users = self.db['users'] # Select or create collection
-        query = {'uid' : user.id}
-        result = users.find_one(query) # Use find_one() since we know id is unique
+        users = self.db['users']  # Select or create collection
+        query = {'uid': user.id}
+        result = users.find_one(query)  # Use find_one() since we know id is unique
 
-        if result: # result should be None if not found
+        if result:  # result should be None if not found
             await ctx.send('Found user {}.'.format(user.name))
         else:
             await ctx.send('Could not find user {}.'.format(user.name))
 
     @commands.command()
-    async def getnation(self, ctx, user : discord.User):
+    async def getnation(self, ctx, user: discord.User):
         """Get the nation for the given player."""
-        nations = self.db['nations'] # Select or create collection
-        query = {'uid' : user.id}
-        result = nations.find_one(query) # Use find_one() since we know id is unique
+        nations = self.db['nations']  # Select or create collection
+        query = {'uid': user.id}
+        result = nations.find_one(query)  # Use find_one() since we know id is unique
 
-        if result: # result should be None if not found
+        if result:  # result should be None if not found
             await ctx.send('{}\'s nation is {}.'.format(user.name, result['nation']))
         else:
             await ctx.send('Could not find {}\'s nation.'.format(user.name))
 
     @commands.command()
-    async def getplayer(self, ctx, nation : str):
+    async def getplayer(self, ctx, nation: str):
         """Get the player for the given nation."""
-        nations = self.db['nations'] # Select or create collection
-        query = {'nation' : nation}
-        result = nations.find_one(query) # Use find_one() since we know id is unique
+        nations = self.db['nations']  # Select or create collection
+        query = {'nation': nation}
+        result = nations.find_one(query)  # Use find_one() since we know id is unique
 
-        if result: # result should be None if not found
+        if result:  # result should be None if not found
             user = get(self.bot.get_all_members(), id=result['uid'])
             if user:
                 await ctx.send('{}\'s player is {}.'.format(nation, user.name))
@@ -65,35 +64,36 @@ class UserQueryCog(commands.Cog, name="User Commands"):
             await ctx.send('Could not find nation {}.'.format(nation))
 
     @commands.command()
-    async def getstats(self, ctx, nation : str):
+    async def getstats(self, ctx, nation: str):
         """Show the given nation's information."""
-        nations = self.db['nations'] # Select or create collection
-        query = {'nation' : nation}
-        result = nations.find_one(query) # Use find_one() since we know id is unique
+        nations = self.db['nations']  # Select or create collection
+        query = {'nation': nation}
+        result = nations.find_one(query)  # Use find_one() since we know id is unique
 
-        if result: # result should be None if not found
-            embed=discord.Embed(title=" ")
+        if result:  # result should be None if not found
+            embed = discord.Embed(title=" ")
             embed.set_author(name=nation)
             embed.add_field(name="Prestige", value=result['prestige'], inline=True)
             embed.add_field(name="Industry", value=result['industry'], inline=True)
             embed.add_field(name="Military", value=result['military'], inline=True)
-            embed.add_field(name="Upperclass pop", value="{:,}".format(int(result['pop']['upper'])), inline=True) # Format as comma-separated int
+            embed.add_field(name="Upperclass pop", value="{:,}".format(int(result['pop']['upper'])),
+                            inline=True)  # Format as comma-separated int
             embed.add_field(name="Middleclass pop", value="{:,}".format(int(result['pop']['middle'])), inline=True)
-            embed.add_field(name="Proletarian pop", value="{:,}".format(int(result['pop']['proletarian'])), inline=True)
+            embed.add_field(name="Military pop", value="{:,}".format(int(result['pop']['military'])), inline=True)
             embed.add_field(name="Peasant pop", value="{:,}".format(int(result['pop']['peasant'])), inline=True)
             await ctx.send(embed=embed)
         else:
             await ctx.send('Could not find nation {}.'.format(nation))
 
     @commands.command()
-    async def gettech(self, ctx, nation : str):
+    async def gettech(self, ctx, nation: str):
         """Show the given nation's tech levels."""
         nations = self.db['nations']
-        query = {'nation' : nation}
+        query = {'nation': nation}
         result = nations.find_one(query)
 
         if result:
-            embed=discord.Embed(title=nation)
+            embed = discord.Embed(title=nation)
             embed.set_author(name='Technology')
             embed.add_field(name='Miliary', value=result['tech']['military'], inline=True)
             embed.add_field(name='Navy', value=result['tech']['navy'], inline=True)
@@ -118,7 +118,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
                 await ctx.send('{}: Player not found.'.format(nation))
 
     @commands.command()
-    async def getadvantage(self, ctx, n1 : str, n2 : str):
+    async def getadvantage(self, ctx, n1: str, n2: str):
         """Get the die roll advantage (or disadvantage) nation 1 has against
         nation 2."""
         nations = self.db['nations']
@@ -130,7 +130,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
 
         # adv \in \Z \cap [-10, 10], determined by logistic curve with adv = +10
         # for (mil1-mil2) \approx 800
-        adv = round(20.0/(1 + math.exp(-0.007*(mil1-mil2))) - 10)
+        adv = round(20.0 / (1 + math.exp(-0.007 * (mil1 - mil2))) - 10)
         await ctx.send('{} has advantage {:+} over {}.'.format(n1, adv, n2))
 
 
