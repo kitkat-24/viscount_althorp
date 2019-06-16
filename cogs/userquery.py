@@ -43,7 +43,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
         result = nations.find_one(query)  # Use find_one() since we know id is unique
 
         if result:  # result should be None if not found
-            await ctx.send('{}\'s nation is {}.'.format(user.name, result['nation']))
+            await ctx.send('{}\'s nation is {}.'.format(user.name, result['name']))
         else:
             await ctx.send('Could not find {}\'s nation.'.format(user.name))
 
@@ -51,7 +51,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
     async def getplayer(self, ctx, nation: str):
         """Get the player for the given nation."""
         nations = self.db['nations']  # Select or create collection
-        query = {'nation': nation}
+        query = {'name': nation}
         result = nations.find_one(query)  # Use find_one() since we know id is unique
 
         if result:  # result should be None if not found
@@ -67,7 +67,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
     async def getstats(self, ctx, nation: str):
         """Show the given nation's information."""
         nations = self.db['nations']  # Select or create collection
-        query = {'nation': nation}
+        query = {'name': nation}
         result = nations.find_one(query)  # Use find_one() since we know id is unique
 
         if result:  # result should be None if not found
@@ -89,7 +89,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
     async def gettech(self, ctx, nation: str):
         """Show the given nation's tech levels."""
         nations = self.db['nations']
-        query = {'nation': nation}
+        query = {'name': nation}
         result = nations.find_one(query)
 
         if result:
@@ -113,7 +113,7 @@ class UserQueryCog(commands.Cog, name="User Commands"):
         for nation in nations.find():
             user = get(self.bot.get_all_members(), id=nation['uid'])
             if user:
-                await ctx.send('{}: {} ({})'.format(nation['nation'], user.name, user.display_name))
+                await ctx.send('{}: {} ({})'.format(nation['name'], user.name, user.display_name))
             else:
                 await ctx.send('{}: Player not found.'.format(nation))
 
@@ -123,9 +123,9 @@ class UserQueryCog(commands.Cog, name="User Commands"):
         nation 2."""
         nations = self.db['nations']
 
-        nat1 = nations.find_one({'nation': n1})
+        nat1 = nations.find_one({'name': n1})
         mil1 = nat1['military']
-        nat2 = nations.find_one({'nation': n2})
+        nat2 = nations.find_one({'name': n2})
         mil2 = nat2['military']
 
         # adv \in \Z \cap [-10, 10], determined by logistic curve with adv = +10

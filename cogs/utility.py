@@ -68,7 +68,7 @@ class UtilityCog(commands.Cog, name="Utility Commands"):
     async def whoareyou(self, ctx):
         """Describe the bot."""
         wiki_url = 'https://en.wikipedia.org/wiki/John_Spencer,_3rd_Earl_Spencer'
-        await ctx.send('I am a bot for computing sums and generally helping facilitate the RP.\n' \
+        await ctx.send('I am a bot for computing sums and generally helping facilitate the RP.\n'
                        'Check out my wikipedia page to learn more about me:\n<{}>'.format(wiki_url))
 
 

@@ -2,19 +2,19 @@ import asyncio
 import discord # discord.py rewrite
 from discord.ext import commands
 import os
-import random
-import traceback, sys
-
+import traceback
+import sys
 
 
 bot = commands.Bot(command_prefix='.')
+
 
 @bot.event
 async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
-    print('-'*max(len(bot.user.name), len(str(bot.user.id))))
+    print('-' * max(len(bot.user.name), len(str(bot.user.id))))
 
 
 cogs = ['cogs.userquery', 'cogs.adminquery', 'cogs.rolls', 'cogs.utility',
@@ -29,5 +29,5 @@ if __name__ == '__main__':
             traceback.print_exc()
 
 
-BOT_TOKEN = os.environ['BOT_TOKEN'] # Load bot token from heroku env
-bot.run(BOT_TOKEN, bot=True, reconnect=True) # Actually run the bot
+BOT_TOKEN = os.environ['BOT_TOKEN']  # Load bot token from heroku env
+bot.run(BOT_TOKEN, bot=True, reconnect=True)  # Actually run the bot

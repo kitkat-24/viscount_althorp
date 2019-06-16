@@ -73,7 +73,7 @@ class CrunchCog(commands.Cog, name="Calculation Commands"):
     async def autopop(self, ctx, name: str, growth_rate: float = 0.0125, modifier: float = 1.0):
         """Automatically calculate new pops."""
         nations = self.db['nations']
-        nat = nations.find_one({"nation": name})
+        nat = nations.find_one({'name': name})
 
         if nat:
             pop = [nat['pop']['upper'], nat['pop']['middle'], nat['pop']['military'], nat['pop']['peasant']]
@@ -85,7 +85,7 @@ class CrunchCog(commands.Cog, name="Calculation Commands"):
                 pop[3] -= lower_to_mid
 
             nations.update_one(
-                {'nation': name},
+                {'name': name},
                 {
                     '$set': {
                         'pop': {
@@ -98,13 +98,11 @@ class CrunchCog(commands.Cog, name="Calculation Commands"):
                 }
             )
             old_pop = nat['pop']
-            nat = nations.find_one({"nation": name})
+            nat = nations.find_one({'name': name})
             new_pop = nat['pop']
             await ctx.send('{}\'s population grew from {} to {}.'.format(name, old_pop, new_pop))
         else:
             await ctx.send('Could not find nation "{}".'.format(name))
-
-
 
 
 def setup(bot):
