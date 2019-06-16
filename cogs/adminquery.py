@@ -166,7 +166,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
                     }
                 }
             )
-            nat = nations.find_one({"nation": name})
+            nat = nations.find_one({'name': name})
             await ctx.send('Set {}\'s population to {}.'.format(name, nat['pop']))
         else:
             await ctx.send('Could not find nation "{}".'.format(name))
