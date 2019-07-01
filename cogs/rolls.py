@@ -22,7 +22,8 @@ class Rolls(commands.Cog, name="Stat Commands"):
             if days <= 0:
                 await ctx.send('Discovered immediately! Infamy accrued: {}'.format(maxinf))
             else:
-                await ctx.send('Discovered after {} days! Infamy accrued: {}'.format(max(0, round(days)), min((inf, maxinf))))
+                s = 'Discovered after {} days! Infamy accrued: {}'
+                await ctx.send(s.format(max(0, round(days)), min((inf, maxinf))))
         else:
             await ctx.send('Fabrication not discovered.')
 

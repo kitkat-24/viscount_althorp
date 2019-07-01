@@ -145,7 +145,8 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
     @commands.command(hidden=True)
     @commands.has_permissions(administrator=True)
-    async def setpop(self, ctx, name: str, upper: int, middle: int, military: int, peas: int):
+    async def setpop(self, ctx, name: str, upper: int, middle: int, military: int,
+            prole: int, peas: int):
         """Set a nation's population.
         Takes a nation and then their upperclass, middleclass, military, and
         peasant populations (separated by spaces, no commas)."""
@@ -161,6 +162,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
                             'upper': upper,
                             'middle': middle,
                             'military': military,
+                            'proletariat': prole,
                             'peasant': peas
                         }
                     }
@@ -173,7 +175,8 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
     @commands.command(hidden=True)
     @commands.has_permissions(administrator=True)
-    async def adjustpop(self, ctx, name: str, upper: int, middle: int, military: int, peas: int):
+    async def adjustpop(self, ctx, name: str, upper: int, middle: int, military: int,
+            prole: int, peas: int):
         """Change a nation's population."""
         nations = self.db['nations']  # Select or create collection
         nat = nations.find_one({'name': name})
@@ -186,6 +189,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
                         'pop.upper': upper,
                         'pop.middle': middle,
                         'pop.military': military,
+                        'proletariat': prole,
                         'pop.peasant': peas
                     }
                 }

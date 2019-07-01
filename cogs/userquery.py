@@ -80,6 +80,8 @@ class UserQueryCog(commands.Cog, name="User Commands"):
                             inline=True)  # Format as comma-separated int
             embed.add_field(name="Middleclass pop", value="{:,}".format(int(result['pop']['middle'])), inline=True)
             embed.add_field(name="Military pop", value="{:,}".format(int(result['pop']['military'])), inline=True)
+            embed.add_field(name="Proletariat pop", value="{:,}".format(int(result['pop']['proletariat'])),
+                    inline=True)
             embed.add_field(name="Peasant pop", value="{:,}".format(int(result['pop']['peasant'])), inline=True)
             await ctx.send(embed=embed)
         else:
