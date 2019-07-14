@@ -8,6 +8,9 @@ import sys
 
 bot = commands.Bot(command_prefix='.')
 
+cogs = ['cogs.userquery', 'cogs.adminquery', 'cogs.rolls', 'cogs.utility',
+        'cogs.test', 'cogs.secret', 'cogs.crunch', 'cogs.embed']
+
 
 @bot.event
 async def on_ready():
@@ -16,11 +19,8 @@ async def on_ready():
     print(bot.user.id)
     print('-' * max(len(bot.user.name), len(str(bot.user.id))))
 
-
-cogs = ['cogs.userquery', 'cogs.adminquery', 'cogs.rolls', 'cogs.utility',
-        'cogs.test', 'cogs.secret', 'cogs.crunch']
-
-if __name__ == '__main__':
+    # Default help command is over-written in cogs.embed
+    #bot.remove_command('help')
     for cog in cogs:
         try:
             bot.load_extension(cog)
@@ -29,5 +29,7 @@ if __name__ == '__main__':
             traceback.print_exc()
 
 
-BOT_TOKEN = os.environ['BOT_TOKEN']  # Load bot token from heroku env
-bot.run(BOT_TOKEN, bot=True, reconnect=True)  # Actually run the bot
+
+if __name__ == '__main__':
+    BOT_TOKEN = os.environ['BOT_TOKEN']  # Load bot token from heroku env
+    bot.run(BOT_TOKEN, bot=True, reconnect=True)  # Actually run the bot
