@@ -9,7 +9,13 @@ import numpy as np
 MONGODB_URI = os.environ['MONGODB_URI']
 
 
-class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
+def admin_check(ctx):
+    """Should return true if the message sender is an admin."""
+    return ctx.author.guild_permissions().administrator
+
+
+class AdminQueryCog(commands.Cog, name="Admin-only Commands",
+        command_attrs=dict(hidden=True, checks=[admin_check])):
     def __init__(self, bot):
         self.bot = bot
         self.client = MongoClient(MONGODB_URI)
@@ -23,9 +29,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
     """----------cog methods----------"""
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
-    # @commands.has_role("Admin") # Is another option I think
+    @commands.command()
     async def adduser(self, ctx, user: discord.User, nation: str):
         """Add a user to the users table.
         Requires an @mentioned user and their nation (separated by a space)."""
@@ -36,8 +40,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
         await ctx.send('Added {} playing as {}.'.format(user.name, nation))
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     # @commands.has_role("Admin") # Is another option I think
     async def removeuser(self, ctx, user: discord.User, nation: str):
         """Remove a user from the users table.
@@ -47,8 +50,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
         await ctx.send('Added {} playing as {}.'.format(user.name, nation))
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def addnation(self, ctx, user: discord.User, name: str, pres: int,
                         ind: int, mil: int):
         """Add a nation to the nation collection.
@@ -62,8 +64,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
 
         await ctx.send('Added {} playing as {}.'.format(user.name, name))
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def removenation(self, ctx, name: str):
         """Remove a nation from the nation collection. THIS IS PERMANENT."""
         nations = self.db['nations']  # Select or create collection
@@ -72,8 +73,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         await ctx.send('Removed nation {}.'.format(name))
 
     # ---------------------------Adjustments to Stats----------------------------#
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def adjustprestige(self, ctx, name: str, pres: int):
         """Change a nation's prestige score."""
         nations = self.db['nations']  # Select or create collection
@@ -85,8 +85,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         else:
             await ctx.send('Could not find nation "{}".'.format(name))
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def adjustindustry(self, ctx, name: str, ind: int):
         """Change a nation's industry score."""
         nations = self.db['nations']  # Select or create collection
@@ -98,8 +97,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         else:
             await ctx.send('Could not find nation "{}".'.format(name))
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def adjustmilitary(self, ctx, name: str, mil: int):
         """Change a nation's military score."""
         nations = self.db['nations']  # Select or create collection
@@ -111,8 +109,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         else:
             await ctx.send('Could not find nation "{}".'.format(name))
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def setwestern(self, ctx, name: str, is_western: bool):
         """Set a nation as western or not."""
         nations = self.db['nations']  # Select or create collection
@@ -127,8 +124,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         else:
             await ctx.send('Could not find nation "{}".'.format(name))
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def setgp(self, ctx, name: str, is_gp: bool):
         """Set a nation as western or not."""
         nations = self.db['nations']  # Select or create collection
@@ -143,8 +139,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         else:
             await ctx.send('Could not find nation "{}".'.format(name))
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def setpop(self, ctx, name: str, upper: int, middle: int, military: int,
             prole: int, peas: int):
         """Set a nation's population.
@@ -173,8 +168,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         else:
             await ctx.send('Could not find nation "{}".'.format(name))
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def adjustpop(self, ctx, name: str, upper: int, middle: int, military: int,
             prole: int, peas: int):
         """Change a nation's population."""
@@ -199,8 +193,7 @@ class AdminQueryCog(commands.Cog, name="Admin-only Commands"):
         else:
             await ctx.send('Could not find nation "{}".'.format(name))
 
-    @commands.command(hidden=True)
-    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def settech(self, ctx, name: str, mil: int, nav: int, cul: int, comm: int, ind):
         """Set a nation's technology."""
         nations = self.db['nations']  # Select or create collection
